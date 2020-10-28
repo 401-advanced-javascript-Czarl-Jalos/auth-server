@@ -8,22 +8,22 @@ const Users = require('./models/users-model');
 
 router.post('/signup', (req, res, next) => {
 
-//unique
-const userInfo = req.body;
-
-Users.save(userInfo.username, userInfo.password)
-  .then(() => {
-    const token = 
-
-
-  })
-
-})
+  //unique 
+  let newUser = new Users(req.body);
+  newUser
+    .save()
+    .then(newUser => {
+      res.status(201).json(newUser);
+    })
+    .catch(console.error);
+});
 
 
 router.post('/signin', (req, res, next) => {
 
-
+  res.status(201).json({ token: req.token, user: req.user });
+  // Additionally, set a Cookie and a Token header on the response, with the token as the value
+  res.cookie('basicAuth', req.token);
 })
 
 router.length('/users', async (req, res, next) => {
