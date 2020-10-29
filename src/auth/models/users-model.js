@@ -38,6 +38,7 @@ users.statics.authenticateBasic = async function (username, password) {
   );
 };
 
+
 users.methods.comparePassword = function (plainPassword, password) {
   console.log('PLAIN PASSWORD: ', plainPassword);
   console.log('PASSWORD: ', this.password);
