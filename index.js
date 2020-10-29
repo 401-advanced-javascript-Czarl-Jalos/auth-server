@@ -2,8 +2,17 @@
 
 const server = require('./src/server.js');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
+// index.js and server.js should be created with standard express server scaffolding
 
-server.listen(3000, () => {
-  console.log('Server is running on PORT 3000');
-});
+const mongooseOptions = {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+};
+
+// Connect the server to a Mongo database
+mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
+
+server.start(process.env.PORT);
