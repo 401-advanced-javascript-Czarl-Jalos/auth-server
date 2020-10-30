@@ -7,6 +7,8 @@ const cors = require('cors');
 const authRouter = require('../src/auth/router');
 const notFound = require('../src/middleware/404');
 const errorHandler = require('../src/middleware/500');
+const extraRouter = require('./extra-routes');
+
 
 // Global Middleware
 app.use(cors());
@@ -16,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(authRouter);
+app.use(extraRouter);
 
 
 module.exports = {

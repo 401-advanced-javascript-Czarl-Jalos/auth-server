@@ -7,7 +7,16 @@ const mongoose = require('mongoose');
 const users = new mongoose.Schema({
   username: { type: String,required: true },
   password: { type: String, required: true},
+  role: { type: String, required: true, enum: ['user', 'admin', 'editor', 'user'] },
 });
+
+// Map of roles to capabilites, assigned to our token that we give the client
+const capabilities = {
+  admin: ['read', 'create', 'update', 'delete'],
+  writer: ['read', 'create'],
+  editor: ['read', 'update'],
+  user: ['read'],
+}
 
 users.pre('save', async function () {
   if (this.isModified('password')) {
@@ -51,11 +60,17 @@ users.methods.comparePassword = function (plainPassword, password) {
   );
 };
 
-users.generateToken = async function () {
-
-  const token = jwt.sign({username: users.username }, 'SECRET_STRING');
-  return token;
+users.methods.generateToken = async function () {
+  try {
+    let token = await jwt.sign({
+      username: this.username,
+      capabilities: capabilities[this.role],
+    }, 'SECRET_STRING');
+    return token;
+  } catch (e) {
+    console.log(e);
+    return Promise.reject('Token error');
+  }
 };
-
 
 module.exports = mongoose.model('users', users);
